@@ -1,0 +1,61 @@
+class is SpriteSceneWithEntities imports cave imports cape imports motion #mainScene:
+
+var height as double
+var width as double
+var backgroundImg as Texture
+var playSprite as TextureSprite
+var helpSprite as TextureSprite
+var audioManager as AudioManager
+var stream as AudioStream
+
+func initialize override
+{
+	base.initialize()
+	height = getReferenceHeight()
+	width = getReferenceWidth()
+	backgroundImg = createTextureForImageResource("mainbackground")
+	addTextureSpriteForSize(backgroundImg, width, height)
+	playSprite = addTextureSpriteForSize(createTextureForImageResource("button"), 0.15 * width, 0.15 * height)
+	playSprite.move(0.3 * width - (playSprite.getWidth() * 0.5), 0.5 * height)
+	helpSprite = addTextureSpriteForSize(createTextureForImageResource("helpbutton"), 0.15 * width, 0.15 * height)
+	helpSprite.move(0.3 * width - (playSprite.getWidth() * 0.5), 0.7 * height)
+	audioManager = AudioManager.forApplication(context)
+	if(audioManager != null) {
+		stream = audioManager.getStreamForResource("mainmusic")
+	}
+	onTimeToPlaySoundStream()
+}
+
+func onPointerEvent(event as PointerEvent) override
+{
+	base.onPointerEvent(event)
+	if(event.isConsumed) {
+		return
+	}
+	if(event.action == PointerEvent.DOWN) {
+		if(event.isInside(playSprite.getX(), playSprite.getY(), playSprite.getWidth(), playSprite.getHeight())) {
+			pushScene(new GameScene())
+		}
+	}
+}
+
+func onTimeToPlaySoundStream
+{
+	if(stream != null) {
+		stream.play()
+		stream.setLooping(true)
+	}
+}
+
+func stopStream
+{
+	if(stream != null) {
+		stream.stop()
+	}
+}
+
+func cleanup override
+{
+	removeAllSprites()
+	stopStream()
+}

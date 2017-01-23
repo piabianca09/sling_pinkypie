@@ -1,0 +1,42 @@
+class is SpriteSceneWithEntities imports cave imports cape imports motion :
+
+var height as double
+var width as double
+var audioManager as AudioManager
+var stream as AudioStream
+var pony as PonyEntity
+
+func initialize override
+{
+	base.initialize()
+	height = getReferenceHeight()
+	width = getReferenceWidth()
+	addEntity(new BackgroundEntity())
+	addEntity(pony = new PonyEntity())
+	audioManager = AudioManager.forApplication(context)
+	if(audioManager != null) {
+		stream = audioManager.getStreamForResource("gamemusic")
+	}
+	onTimeToPlaySoundStream()
+}
+
+func onTimeToPlaySoundStream
+{
+	if(stream != null) {
+		stream.play()
+		stream.setLooping(true)
+	}
+}
+
+func stopStream
+{
+	if(stream != null) {
+		stream.stop()
+	}
+}
+
+func cleanup override
+{
+	removeAllSprites()
+	stopStream()
+}

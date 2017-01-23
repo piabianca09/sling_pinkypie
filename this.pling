@@ -1,0 +1,19 @@
+title = "my little pony project"
+description = "This is a longer description about my program."
+copyright = "Copyright (c) Test Program"
+license = "All rights reserved"
+version = "1.0.x"
+vendorId = "com.game"
+depends = [
+	"cape",
+	"cave",
+	"motion"
+]
+resources = [
+	"images",
+	"music"
+]
+preFilters += "@motion"
+compilerOptions = {
+	"html5.readableCode" : "true"
+}
