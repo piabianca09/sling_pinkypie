@@ -1,0 +1,83 @@
+class is SpriteEntity imports cape imports cave imports motion :
+
+var scene as GameScene
+var balloonSprite as TextureSprite
+var height as double
+var width as double
+var pHeight as double
+var pWidth as double
+var pX as double
+var pY as double
+var total1 as double
+var total2 as double
+var balloon as int
+var collide = false
+var audioManager as AudioManager
+var clip as AudioClip
+var speed as double
+
+func createSprite override as Sprite
+{
+	scene = getScene() as GameScene
+	height = scene.getReferenceHeight()
+	width = scene.getReferenceWidth()
+	var random = new Random()
+	balloon = random.nextInt(1,13)
+	speed = 0.3
+	audioManager = AudioManager.forApplication(scene.getContext())
+	if(audioManager != null) {
+		clip = audioManager.getClipForResource("dead")
+	}
+	if(balloon >= 1 && balloon <= 5) {
+		balloonSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("balloon"), 0.1 * width, 0.2 * height)
+	}
+	else if(balloon >= 6 && balloon <=9) {
+		balloonSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("balloon1"), 0.1 * width, 0.3 * height)
+	}
+	else if(balloon >= 10 && balloon <=12) {
+		balloonSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("balloon"), 0.1 * width, 0.4 * height)
+	}
+	else if(balloon >= 13 && balloon <=15) {
+		balloonSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("balloon1"), 0.1 * width, 0.5 * height)
+	}
+	balloonSprite.move(width - balloonSprite.getWidth(), height - balloonSprite.getHeight())
+	return balloonSprite
+}
+
+func isCollide(sprite1 as Sprite, sprite2 as Sprite) as bool
+{
+	collide = false
+	pHeight = sprite1.getHeight() * 0.05
+	pWidth = sprite1.getWidth() * 0.05
+	total1 = pHeight + pWidth
+	pX = sprite1.getX() - sprite2.getX()
+	pY = sprite1.getY() - sprite2.getY()
+	total2 = Math.sqrt(pX * pX - pY * pY)
+	if(total2 < total1) {
+		collide = true
+	}
+	return(collide)
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	if (isCollide(scene.getPony(), balloonSprite)) {
+		PRINT("bal")
+		onTimeToPlaySoundClip()
+		scene.pushScene(new GameOverScene())
+	}
+	balloonSprite.move(balloonSprite.getX() - delta * speed , balloonSprite.getY())
+}
+
+func onTimeToPlaySoundClip
+{
+	if(clip != null) {
+		clip.play()
+	}
+}
+
+func cleanup override
+{
+	scene.removeAllSprites()
+}

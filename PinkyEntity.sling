@@ -1,0 +1,51 @@
+class is SpriteEntity imports cape imports cave imports motion :
+
+var scene as GameScene
+var pinkySprite as TextureSprite
+var height as double
+var width as double
+var pinky as int
+var audioManager as AudioManager
+var clip as AudioClip
+
+func createSprite override as Sprite
+{
+	scene = getScene() as GameScene
+	height = scene.getReferenceHeight()
+	width = scene.getReferenceWidth()
+	var random = new Random()
+	pinky = random.nextInt(1,13)
+	audioManager = AudioManager.forApplication(scene.getContext())
+	if(audioManager != null) {
+		clip = audioManager.getClipForResource("dead")
+	}
+	if(pinky >= 1 && pinky <= 5) {
+		pinkySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinky1"), 0.07 * width, 0.09 * height)
+	}
+	else if(pinky >= 6 && pinky <=9) {
+		pinkySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinky2"), 0.07 * width, 0.09 * height)
+	}
+	else if(pinky >= 10 && pinky <=12) {
+		pinkySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinky3"), 0.07 * width, 0.09 * height)
+	}
+	pinkySprite.move(width - pinkySprite.getWidth() * random.nextDouble(), height - pinkySprite.getWidth() * random.nextDouble())
+	return pinkySprite
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+
+}
+
+func onTimeToPlaySoundClip
+{
+	if(clip != null) {
+		clip.play()
+	}
+}
+
+func cleanup override
+{
+	scene.removeAllSprites()
+}

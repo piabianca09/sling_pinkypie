@@ -1,0 +1,58 @@
+class is SpriteSceneWithEntities imports cave imports cape imports motion :
+
+var height as double
+var width as double
+var backgroundImg as Texture
+var playagainSprite as TextureSprite
+var audioManager as AudioManager
+var stream as AudioStream
+
+func initialize override
+{
+	base.initialize()
+	height = getReferenceHeight()
+	width = getReferenceWidth()
+	backgroundImg = createTextureForImageResource("gameoverscenebg")
+	addTextureSpriteForSize(backgroundImg, width, height)
+	playagainSprite = addTextureSpriteForSize(createTextureForImageResource("playagainbutton"), 0.18 * width, 0.15 * height)
+	playagainSprite.move(0.5 * width - (playagainSprite.getWidth() * 0.5), 0.5 * height)
+	audioManager = AudioManager.forApplication(context)
+	if(audioManager != null) {
+		stream = audioManager.getStreamForResource("mainmusic")
+	}
+	onTimeToPlaySoundStream()
+}
+
+func onPointerEvent(event as PointerEvent) override
+{
+	base.onPointerEvent(event)
+	if(event.isConsumed) {
+		return
+	}
+	if(event.action == PointerEvent.DOWN) {
+		if(event.isInside(playagainSprite.getX(), playagainSprite.getY(), playagainSprite.getWidth(), playagainSprite.getHeight())) {
+			popScene()
+		}
+	}
+}
+
+func onTimeToPlaySoundStream
+{
+	if(stream != null) {
+		stream.play()
+		stream.setLooping(true)
+	}
+}
+
+func stopStream
+{
+	if(stream != null) {
+		stream.stop()
+	}
+}
+
+func cleanup override
+{
+	removeAllSprites()
+	stopStream()
+}

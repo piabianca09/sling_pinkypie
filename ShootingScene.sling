@@ -4,10 +4,7 @@ var height as double
 var width as double
 var audioManager as AudioManager
 var stream as AudioStream
-var pony as PonyEntity
-var balloon as BalloonEntity
-var star as StarEntity
-var coin as CoinEntity
+var pinky as PinkyEntity
 var timer as int
 var quitSprite as TextureSprite
 
@@ -17,9 +14,7 @@ func initialize override
 	height = getReferenceHeight()
 	width = getReferenceWidth()
 	addEntity(new BackgroundEntity())
-	addEntity(pony = new PonyEntity())
-	addEntity(star = new StarEntity())
-	addEntity(coin = new CoinEntity())
+	addEntity(pinky = new PinkyEntity())
 	quitSprite = addTextureSpriteForSize(createTextureForImageResource("quitbutton"), 0.1 * width, 0.1 * height)
 	quitSprite.move(width - quitSprite.getWidth(), height - quitSprite.getHeight())
 	timer = 0
@@ -35,13 +30,7 @@ func tick (gameTime as TimeValue, delta as double) override
 	base.tick(gameTime, delta)
 	timer++
 	if((timer % 50) == 0) {
-		addEntity(balloon = new BalloonEntity())
-	}
-	if((timer % 20) == 0) {
-		addEntity(star = new StarEntity())
-	}
-	if((timer % 40) == 0) {
-		addEntity(coin = new CoinEntity())
+		addEntity(pinky = new PinkyEntity())
 	}
 }
 
@@ -71,21 +60,6 @@ func stopStream
 	if(stream != null) {
 		stream.stop()
 	}
-}
-
-func getPony as PonyEntity
-{
-	return pony
-}
-
-func getBalloon as BalloonEntity
-{
-	return balloon
-}
-
-func getStar as StarEntity
-{
-	return star
 }
 
 func getContext as ApplicationContext

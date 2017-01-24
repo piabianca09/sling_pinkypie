@@ -9,15 +9,18 @@ var spriteY as double
 var pointerX as double
 var pointerY as double
 var isClicked = false
-var isPressedKeySpace = false
+var isPressedKeyUp = false
+var isPressedKeyDown = false
+var isPressedKeyRight = false
+var isPressedKeyLeft = false
 
 func createSprite override as Sprite
 {
 	scene = getScene() as GameScene
 	height = scene.getReferenceHeight()
 	width = scene.getReferenceWidth()
-	ponySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkypie"), 0.1 * width, 0.2 * height)
-	ponySprite.move(0, height - ponySprite.getHeight())
+	ponySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkypiesprite"), 0.1 * width, 0.1 * height)
+	ponySprite.move(0.1 * width - (ponySprite.getWidth() * 0.5), 0.5 * height - (ponySprite.getHeight() * 0.5))
 	return ponySprite
 }
 
@@ -44,24 +47,42 @@ func tick(gameTime as TimeValue, delta as double) override
 		spriteY -= (sprite.getY() - (pointerY + 0.5 * sprite.getHeight())) * 0.1
 		sprite.move(spriteX, spriteY)
 	}
-	else if (isPressedKeySpace) {
+	else if (isPressedKeyUp) {
 		sprite.move(spriteX, sprite.getY() - height * 0.01)
 	}
-	else if(!isPressedKeySpace) {
+	else if (isPressedKeyDown) {
 		sprite.move(spriteX, sprite.getY() + height * 0.01)
+	}
+	else if (isPressedKeyLeft) {
+		sprite.move(spriteX - width * 0.01, spriteY)
+	}
+	else if (isPressedKeyRight) {
+		sprite.move(spriteX + width * 0.01, spriteY)
 	}
 }
 
 func onKeyEvent(event as KeyEvent)
 {
-	if(event.isKey(KeyEvent.KEY_SPACE)) {
-		isPressedKeySpace = true
+	if(event.isKey(KeyEvent.KEY_UP)) {
+		isPressedKeyUp = true
+	}
+	else if(event.isKey(KeyEvent.KEY_DOWN)) {
+		isPressedKeyDown = true
+	}
+	else if(event.isKey(KeyEvent.KEY_LEFT)) {
+		isPressedKeyLeft = true
+	}
+	else if(event.isKey(KeyEvent.KEY_RIGHT)) {
+		isPressedKeyRight = true
 	}
 	else {
 		PRINT("Unhandled key event: `".. event.getStringValue() .."'")
 	}
 	if (event.getAction() == 2) {
-		isPressedKeySpace = false
+		isPressedKeyUp = false
+		isPressedKeyDown = false
+		isPressedKeyLeft = false
+		isPressedKeyRight = false
 	}
 }
 
