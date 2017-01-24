@@ -3,8 +3,7 @@ class is SpriteSceneWithEntities imports cave imports cape imports motion :
 var height as double
 var width as double
 var backgroundImg as Texture
-var playagainSprite as TextureSprite
-var mainSprite as TextureSprite
+var pony as TextureSprite
 var audioManager as AudioManager
 var stream as AudioStream
 
@@ -13,12 +12,10 @@ func initialize override
 	base.initialize()
 	height = getReferenceHeight()
 	width = getReferenceWidth()
-	backgroundImg = createTextureForImageResource("gameoverscenebg")
+	backgroundImg = createTextureForImageResource("helpinstructions")
 	addTextureSpriteForSize(backgroundImg, width, height)
-	playagainSprite = addTextureSpriteForSize(createTextureForImageResource("playagainbutton"), 0.18 * width, 0.15 * height)
-	playagainSprite.move(0.5 * width - (playagainSprite.getWidth() * 0.5), 0.5 * height)
-	mainSprite = addTextureSpriteForSize(createTextureForImageResource("mainmenu"), 0.18 * width, 0.15 * height)
-	mainSprite.move(0.5 * width - (playagainSprite.getWidth() * 0.5), 0.7 * height)
+	pony = addTextureSpriteForSize(createTextureForImageResource("ponybutton"), 0.15 * width, 0.15 * height)
+	pony.move(0.7 * width - (pony.getWidth() * 0.5), 0.7 * height)
 	audioManager = AudioManager.forApplication(context)
 	if(audioManager != null) {
 		stream = audioManager.getStreamForResource("mainmusic")
@@ -33,11 +30,8 @@ func onPointerEvent(event as PointerEvent) override
 		return
 	}
 	if(event.action == PointerEvent.DOWN) {
-		if(event.isInside(playagainSprite.getX(), playagainSprite.getY(), playagainSprite.getWidth(), playagainSprite.getHeight())) {
+		if(event.isInside(pony.getX(), pony.getY(), pony.getWidth(), pony.getHeight())) {
 			pushScene(new GameScene())
-		}
-		if(event.isInside(mainSprite.getX(), mainSprite.getY(), mainSprite.getWidth(), mainSprite.getHeight())) {
-			pushScene(new MainScene())
 		}
 	}
 }

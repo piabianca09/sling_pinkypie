@@ -4,14 +4,7 @@ var scene as GameScene
 var starSprite as TextureSprite
 var height as double
 var width as double
-var pHeight as double
-var pWidth as double
-var pX as double
-var pY as double
-var total1 as double
-var total2 as double
 var star as int
-var collide = false
 var audioManager as AudioManager
 var clip as AudioClip
 var y as double
@@ -27,7 +20,7 @@ func createSprite override as Sprite
 	speed = 0.3
 	audioManager = AudioManager.forApplication(scene.getContext())
 	if(audioManager != null) {
-		clip = audioManager.getClipForResource("dead")
+		clip = audioManager.getClipForResource("coin")
 	}
 	if(star >= 1 && star <= 5) {
 		starSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("yellowstar"), 0.07 * width, 0.09 * height)
@@ -42,34 +35,19 @@ func createSprite override as Sprite
 		starSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("purplestar"), 0.07 * width, 0.09 * height)
 	}
 	y = height * random.nextDouble()
-	starSprite.move(width - starSprite.getWidth(), 0)
+	starSprite.move(width - starSprite.getWidth(), 0.6 * height -starSprite.getHeight())
 	return starSprite
-}
-
-func isCollide(sprite1 as Sprite, sprite2 as Sprite) as bool
-{
-	collide = false
-	pHeight = sprite1.getHeight() * 0.05
-	pWidth = sprite1.getWidth() * 0.05
-	total1 = pHeight + pWidth
-	pX = sprite1.getX() - sprite2.getX()
-	pY = sprite1.getY() - sprite2.getY()
-	total2 = Math.sqrt(pX * pX - pY * pY)
-	if(total2 < total1) {
-		collide = true
-	}
-	return(collide)
 }
 
 func tick(gameTime as TimeValue, delta as double) override
 {
 	base.tick(gameTime, delta)
-	if (isCollide(scene.getPony(), starSprite)) {
-		PRINT("star")
-		onTimeToPlaySoundClip()
-		scene.pushScene(new GameOverScene())
-	}
 	starSprite.move(starSprite.getX() - delta * speed , starSprite.getY())
+	scene.addScore()
+	if(sprite.getX() < scene.getPony().getX() + scene.getPony().getWidth() && scene.getPony().getX() < sprite.getWidth() + sprite.getX() && sprite.getY() < scene.getPony().getY() + scene.getPony().getHeight() && scene.getPony().getY() < sprite.getY() + sprite.getHeight()){
+		scene.removeSprite(starSprite)
+		onTimeToPlaySoundClip()
+	}
 }
 
 func onTimeToPlaySoundClip

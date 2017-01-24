@@ -9,18 +9,15 @@ var spriteY as double
 var pointerX as double
 var pointerY as double
 var isClicked = false
-var isPressedKeyUp = false
-var isPressedKeyDown = false
-var isPressedKeyRight = false
-var isPressedKeyLeft = false
+var isPressedKeySpace = false
 
 func createSprite override as Sprite
 {
 	scene = getScene() as GameScene
 	height = scene.getReferenceHeight()
 	width = scene.getReferenceWidth()
-	ponySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkypiesprite"), 0.1 * width, 0.1 * height)
-	ponySprite.move(0.1 * width - (ponySprite.getWidth() * 0.5), 0.5 * height - (ponySprite.getHeight() * 0.5))
+	ponySprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkypiesprite"), 0.1 * width, 0.2 * height)
+	ponySprite.move(0.1 * width - (ponySprite.getWidth() * 0.5), 0.5 * height - ponySprite.getHeight())
 	return ponySprite
 }
 
@@ -42,47 +39,35 @@ func tick(gameTime as TimeValue, delta as double) override
 	base.tick(gameTime, delta)
 	spriteX = sprite.getX()
 	spriteY = sprite.getY()
-	if (isClicked) {
-		spriteX -= (sprite.getX() - (pointerX + 0.5 * sprite.getWidth())) * 0.1
-		spriteY -= (sprite.getY() - (pointerY + 0.5 * sprite.getHeight())) * 0.1
-		sprite.move(spriteX, spriteY)
-	}
-	else if (isPressedKeyUp) {
+	// if (isClicked) {
+	// 	spriteX -= (sprite.getX() - (pointerX + 0.5 * sprite.getWidth())) * 0.1
+	// 	spriteY -= (sprite.getY() - (pointerY + 0.5 * sprite.getHeight())) * 0.1
+	// 	sprite.move(spriteX, spriteY)
+	// }
+	if (isPressedKeySpace) {
 		sprite.move(spriteX, sprite.getY() - height * 0.01)
 	}
-	else if (isPressedKeyDown) {
+	else if (!isPressedKeySpace) {
 		sprite.move(spriteX, sprite.getY() + height * 0.01)
 	}
-	else if (isPressedKeyLeft) {
-		sprite.move(spriteX - width * 0.01, spriteY)
+	if(sprite.getY() < 0) {
+		sprite.move(sprite.getX(), 0)
 	}
-	else if (isPressedKeyRight) {
-		sprite.move(spriteX + width * 0.01, spriteY)
+	if(sprite.getY() + sprite.getHeight() >= height) {
+		sprite.move(sprite.getX(), height - sprite.getHeight())
 	}
 }
 
 func onKeyEvent(event as KeyEvent)
 {
-	if(event.isKey(KeyEvent.KEY_UP)) {
-		isPressedKeyUp = true
-	}
-	else if(event.isKey(KeyEvent.KEY_DOWN)) {
-		isPressedKeyDown = true
-	}
-	else if(event.isKey(KeyEvent.KEY_LEFT)) {
-		isPressedKeyLeft = true
-	}
-	else if(event.isKey(KeyEvent.KEY_RIGHT)) {
-		isPressedKeyRight = true
+	if(event.isKey(KeyEvent.KEY_SPACE)) {
+		isPressedKeySpace = true
 	}
 	else {
 		PRINT("Unhandled key event: `".. event.getStringValue() .."'")
 	}
 	if (event.getAction() == 2) {
-		isPressedKeyUp = false
-		isPressedKeyDown = false
-		isPressedKeyLeft = false
-		isPressedKeyRight = false
+		isPressedKeySpace = false
 	}
 }
 

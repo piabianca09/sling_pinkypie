@@ -5,11 +5,14 @@ var width as double
 var audioManager as AudioManager
 var stream as AudioStream
 var pony as PonyEntity
-var balloon as BalloonEntity
 var star as StarEntity
-var coin as CoinEntity
+var hoopD as HoopDownEntity
+var hoopU as HoopUpEntity
 var timer as int
 var quitSprite as TextureSprite
+var scoreSprite as TextSprite
+var score as int
+var time as int
 
 func initialize override
 {
@@ -17,12 +20,20 @@ func initialize override
 	height = getReferenceHeight()
 	width = getReferenceWidth()
 	addEntity(new BackgroundEntity())
-	addEntity(pony = new PonyEntity())
 	addEntity(star = new StarEntity())
-	addEntity(coin = new CoinEntity())
+	addEntity(hoopD = new HoopDownEntity())
+	addEntity(hoopU = new HoopUpEntity())
+	addEntity(pony = new PonyEntity())
 	quitSprite = addTextureSpriteForSize(createTextureForImageResource("quitbutton"), 0.1 * width, 0.1 * height)
 	quitSprite.move(width - quitSprite.getWidth(), height - quitSprite.getHeight())
+	var textprop = TextProperties.forText("Score")
+	textprop.setTextColor(Color.white())
+	textprop.setFontSizeRelative(0.1 * height)
+	scoreSprite = addTextSprite(textprop)
+	scoreSprite.move(0,0)
 	timer = 0
+	time = 1000
+	score = 0
 	audioManager = AudioManager.forApplication(context)
 	if(audioManager != null) {
 		stream = audioManager.getStreamForResource("gamemusic")
@@ -34,15 +45,22 @@ func tick (gameTime as TimeValue, delta as double) override
 {
 	base.tick(gameTime, delta)
 	timer++
-	if((timer % 50) == 0) {
-		addEntity(balloon = new BalloonEntity())
+	time--
+	if(time > 500) {
+		if((timer % 100) == 0) {
+			addEntity(hoopD = new HoopDownEntity())
+			addEntity(hoopU = new HoopUpEntity())
+			addEntity(star = new StarEntity())
+		}
 	}
-	if((timer % 20) == 0) {
-		addEntity(star = new StarEntity())
+	else if(time <= 500) {
+		if((timer % 50) == 0) {
+			addEntity(hoopD = new HoopDownEntity())
+			addEntity(hoopU = new HoopUpEntity())
+			addEntity(star = new StarEntity())
+		}
 	}
-	if((timer % 40) == 0) {
-		addEntity(coin = new CoinEntity())
-	}
+	scoreSprite.setText(String.append("Score:", score))
 }
 
 func onPointerEvent(event as PointerEvent) override
@@ -66,6 +84,11 @@ func onTimeToPlaySoundStream
 	}
 }
 
+func getPony as PonyEntity
+{
+	return pony
+}
+
 func stopStream
 {
 	if(stream != null) {
@@ -73,19 +96,14 @@ func stopStream
 	}
 }
 
-func getPony as PonyEntity
+func getScore as int
 {
-	return pony
+	return score
 }
 
-func getBalloon as BalloonEntity
+func addScore
 {
-	return balloon
-}
-
-func getStar as StarEntity
-{
-	return star
+	score++
 }
 
 func getContext as ApplicationContext
@@ -96,5 +114,8 @@ func getContext as ApplicationContext
 func cleanup override
 {
 	removeAllSprites()
+	removeEntity(star)
+	removeEntity(hoopD)
+	removeEntity(pony)
 	stopStream()
 }

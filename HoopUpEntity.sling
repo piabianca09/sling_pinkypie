@@ -1,0 +1,60 @@
+class is SpriteEntity imports cape imports cave imports motion :
+
+var scene as GameScene
+var hoopDSprite as TextureSprite
+var height as double
+var width as double
+var audioManager as AudioManager
+var clip as AudioClip
+var speed as double
+var hoop as int
+var random = new Random()
+
+func createSprite override as Sprite
+{
+	scene = getScene() as GameScene
+	height = scene.getReferenceHeight()
+	width = scene.getReferenceWidth()
+	speed = 0.3
+	audioManager = AudioManager.forApplication(scene.getContext())
+	if(audioManager != null) {
+		clip = audioManager.getClipForResource("dead")
+	}
+	hoop = random.nextInt(1, 6)
+	if(hoop >= 1 && hoop <= 3) {
+		hoopDSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.1 * height)
+	}
+	else if(hoop >= 4 && hoop <=5) {
+		hoopDSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.2 * height)
+	}
+	else if(hoop >= 6 && hoop <= 9) {
+		hoopDSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.3 * height)
+	}
+	else if(hoop >= 10 && hoop <= 13) {
+		hoopDSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.4 * height)
+	}
+	hoopDSprite.move(width - hoopDSprite.getWidth(), height - hoopDSprite.getHeight())
+	return hoopDSprite
+}
+
+func tick(gameTime as TimeValue, delta as double) override
+{
+	base.tick(gameTime, delta)
+	sprite.move(sprite.getX() - delta * speed , sprite.getY())
+	if(sprite.getX() < scene.getPony().getX() + scene.getPony().getWidth() && scene.getPony().getX() < sprite.getWidth() + sprite.getX() && sprite.getY() < scene.getPony().getY() + scene.getPony().getHeight() && scene.getPony().getY() < sprite.getY() + sprite.getHeight()){
+		onTimeToPlaySoundClip()
+		scene.pushScene(new GameOverScene())
+	}
+}
+
+func onTimeToPlaySoundClip
+{
+	if(clip != null) {
+		clip.play()
+	}
+}
+
+func cleanup override
+{
+	scene.removeAllSprites()
+}

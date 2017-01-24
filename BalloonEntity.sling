@@ -65,7 +65,7 @@ func tick(gameTime as TimeValue, delta as double) override
 	if (isCollide(scene.getPony(), balloonSprite)) {
 		PRINT("bal")
 		onTimeToPlaySoundClip()
-		scene.pushScene(new GameOverScene())
+		// scene.pushScene(new GameOverScene())
 	}
 	balloonSprite.move(balloonSprite.getX() - delta * speed , balloonSprite.getY())
 }

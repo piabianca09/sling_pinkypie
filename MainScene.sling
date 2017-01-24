@@ -3,8 +3,7 @@ class is SpriteSceneWithEntities imports cave imports cape imports motion #mainS
 var height as double
 var width as double
 var backgroundImg as Texture
-var coinCollector as TextureSprite
-var pps as TextureSprite
+var pony as TextureSprite
 var helpSprite as TextureSprite
 var audioManager as AudioManager
 var stream as AudioStream
@@ -16,12 +15,10 @@ func initialize override
 	width = getReferenceWidth()
 	backgroundImg = createTextureForImageResource("mainbackground")
 	addTextureSpriteForSize(backgroundImg, width, height)
-	coinCollector = addTextureSpriteForSize(createTextureForImageResource("coincollector"), 0.15 * width, 0.15 * height)
-	coinCollector.move(0.3 * width - (coinCollector.getWidth() * 0.5), 0.4 * height)
-	pps = addTextureSpriteForSize(createTextureForImageResource("pinkypieshooter"), 0.15 * width, 0.15 * height)
-	pps.move(0.3 * width - (pps.getWidth() * 0.5), 0.6 * height)
+	pony = addTextureSpriteForSize(createTextureForImageResource("ponybutton"), 0.15 * width, 0.15 * height)
+	pony.move(0.3 * width - (pony.getWidth() * 0.5), 0.4 * height)
 	helpSprite = addTextureSpriteForSize(createTextureForImageResource("helpbutton"), 0.15 * width, 0.15 * height)
-	helpSprite.move(0.3 * width - (helpSprite.getWidth() * 0.5), 0.8 * height)
+	helpSprite.move(0.3 * width - (helpSprite.getWidth() * 0.5), 0.6 * height)
 	audioManager = AudioManager.forApplication(context)
 	if(audioManager != null) {
 		stream = audioManager.getStreamForResource("mainmusic")
@@ -36,11 +33,12 @@ func onPointerEvent(event as PointerEvent) override
 		return
 	}
 	if(event.action == PointerEvent.DOWN) {
-		if(event.isInside(coinCollector.getX(), coinCollector.getY(), coinCollector.getWidth(), coinCollector.getHeight())) {
+		if(event.isInside(pony.getX(), pony.getY(), pony.getWidth(), pony.getHeight())) {
 			pushScene(new GameScene())
 		}
-		if(event.isInside(pps.getX(), pps.getY(), pps.getWidth(), pps.getHeight())) {
-			pushScene(new GameScene())
+		if(event.isInside(helpSprite.getX(), helpSprite.getY(), helpSprite.getWidth(), helpSprite.getHeight())) {
+			PRINT("help")
+			pushScene(new HelpScene())
 		}
 	}
 }
