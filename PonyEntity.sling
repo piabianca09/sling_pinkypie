@@ -39,11 +39,11 @@ func tick(gameTime as TimeValue, delta as double) override
 	base.tick(gameTime, delta)
 	spriteX = sprite.getX()
 	spriteY = sprite.getY()
-	// if (isClicked) {
-	// 	spriteX -= (sprite.getX() - (pointerX + 0.5 * sprite.getWidth())) * 0.1
-	// 	spriteY -= (sprite.getY() - (pointerY + 0.5 * sprite.getHeight())) * 0.1
-	// 	sprite.move(spriteX, spriteY)
-	// }
+	if (isClicked) {
+		spriteX -= (sprite.getX() - (pointerX + 0.5 * sprite.getWidth())) * 0.1
+		spriteY -= (sprite.getY() - (pointerY + 0.5 * sprite.getHeight())) * 0.1
+		sprite.move(spriteX, spriteY)
+	}
 	if (isPressedKeySpace) {
 		sprite.move(spriteX, sprite.getY() - height * 0.01)
 	}

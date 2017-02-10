@@ -22,16 +22,16 @@ func createSprite override as Sprite
 	}
 	hoop = random.nextInt(1, 6)
 	if(hoop >= 1 && hoop <= 3) {
-		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.3 * height)
+		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkbutton"), 0.07 * width, 0.3 * height)
 	}
 	else if(hoop >= 4 && hoop <=5) {
-		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.4 * height)
+		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkbutton"), 0.07 * width, 0.4 * height)
 	}
 	else if(hoop >= 6 && hoop <= 9) {
-		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.5 * height)
+		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkbutton"), 0.07 * width, 0.5 * height)
 	}
 	else if(hoop >= 10 && hoop <= 13) {
-		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pink-button"), 0.07 * width, 0.6 * height)
+		hoopUSprite = scene.addTextureSpriteForSize(scene.createTextureForImageResource("pinkbutton"), 0.07 * width, 0.6 * height)
 	}
 	hoopUSprite.move(width - hoopUSprite.getWidth(), 0)
 	return hoopUSprite
